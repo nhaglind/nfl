@@ -86,7 +86,7 @@ export async function getTeamData(teamId: string): Promise<TeamData> {
   }
 
   const res = await fetch(
-    `https://site.api.espn.com/apis/site/v2/sports/basketball/mens-college-basketball/teams/${teamId}/schedule`
+    `https://site.api.espn.com/apis/site/v2/sports/football/nfl/teams/${teamId}/schedule`
   );
 
   if (!res.ok) {
@@ -140,7 +140,7 @@ export async function getAllTeamIds(): Promise<TeamBasicInfo[]> {
 
   const pagePromises = Array.from({ length: 8 }, (_, i) =>
     fetch(
-      `https://site.api.espn.com/apis/site/v2/sports/basketball/mens-college-basketball/teams?page=${i + 1}`
+      `https://site.api.espn.com/apis/site/v2/sports/football//teams?page=${i + 1}`
     ).then((res) => {
       if (!res.ok) {
         throw new Error(`Failed to fetch team IDs: ${res.statusText}`);
@@ -162,7 +162,7 @@ export async function getTodaySchedule() {
   cacheLife('days');
 
   const res = await fetch(
-    'https://site.web.api.espn.com/apis/site/v2/sports/basketball/mens-college-basketball/scoreboard'
+    'https://site.web.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard'
   );
 
   if (!res.ok) {
@@ -215,7 +215,7 @@ export async function getConferenceRankings(): Promise<
   cacheLife('hours');
 
   const res = await fetch(
-    'https://site.web.api.espn.com/apis/v2/sports/basketball/mens-college-basketball/standings?region=us&lang=en&contentorigin=espn&group=8&season=2024'
+    'https://site.web.api.espn.com/apis/v2/sports/football/nfl/standings?region=us&lang=en&contentorigin=espn&group=8&season=2024'
   );
 
   if (!res.ok) {

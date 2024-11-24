@@ -4,7 +4,7 @@ export default function manifest(): MetadataRoute.Manifest {
   return {
     name: 'NCAAM',
     short_name: 'NCAAM',
-    description: 'Simple basketball stats.',
+    description: 'Simple football stats.',
     start_url: '/',
     display: 'standalone',
     background_color: '#ffffff',
