@@ -75,7 +75,7 @@ function Row({
 
 function RankingRow({
   color,
-  gamesBack,
+  overallWinLoss,
   index,
   isLast,
   logo,
@@ -106,7 +106,7 @@ function RankingRow({
       </div>
       <div className="flex flex-row-reverse justify-end min-[450px]:flex-row">
         <p className="text-gray-700 dark:text-gray-300 tabular-nums">
-          {gamesBack}
+          {overallWinLoss}
         </p>
       </div>
     </div>
