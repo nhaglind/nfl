@@ -114,7 +114,6 @@ export async function getTeamData(teamId: string): Promise<TeamData> {
       date: event.competitions[0].status.type.shortDetail,
       name: otherTeam.team.displayName,
       teamId: otherTeam.team.id,
-      rank: otherTeam.curatedRank.current,
       logo,
       color,
       homeScore: favoriteTeam.score?.value,
@@ -199,8 +198,7 @@ export async function getTodaySchedule() {
   });
 
   return {
-    date: "Today",
-    // date: data.day.date,
+    date: new Date().toISOString(),
     games,
   };
 }
@@ -209,14 +207,11 @@ function formatTeamData(teamData: CompetitorData) {
   return {
     name: teamData.team.displayName,
     teamId: teamData.team.id,
-    // rank: teamData.curatedRank.current,
-    logo: teamData.team.logo ?? DEFAULT_LOGO,
+    logo: teamData.team.logo ?? null,
     color: getTeamColor(teamData.team.displayName),
     score: teamData.score,
     winner: teamData.winner,
-    record: teamData.records
-      ? `(${teamData.records[0].summary}, ${teamData.records[3]?.summary ?? 'N/A'})`
-      : 'N/A',
+    record: teamData.records?.[0]?.summary ?? 'N/A'
   };
 }
 
@@ -244,7 +239,7 @@ export async function getConferenceRankings() {
     return {
       name: team.displayName,
       teamId: team.id,
-      logo: team.logos?.[0]?.href ?? DEFAULT_LOGO,
+      logo: team.logos?.[0]?.href ?? null,
       color: getTeamColor(team.displayName),
       conferenceWinLoss: getStat(stats, 'vs. Conf.'),
       gamesBack: getStat(stats, 'gamesBehind'),

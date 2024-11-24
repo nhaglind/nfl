@@ -115,7 +115,7 @@ function RankingRow({
 
 export default async function HomePage() {
   const [team, allTeams, confRankings] = await Promise.all([
-    getTeamData('66'),
+    getTeamData('16'),
     getAllTeamIds(),
     getConferenceRankings(),
   ]);
@@ -125,20 +125,19 @@ export default async function HomePage() {
     <main className="grid md:grid-cols-2 lg:grid-cols-3">
       <section className="w-full mx-auto p-6 border-r border-gray-200 dark:border-gray-800">
         <div className="flex items-center">
-          <Image
-            src={logo}
-            alt="Logo"
-            priority
-            width={24}
-            height={24}
-            className={clsx('h-6 w-6', {
-              'dark:invert': color === '000000',
-            })}
-          />
+          {logo ? (
+            <Image
+              src={logo}
+              alt="Logo"
+              priority
+              width={48}
+              height={48}
+            />
+          ) : null}
           <h1 className="font-semibold text-2xl ml-2">{name}</h1>
         </div>
         <h3 className="text-gray-700 dark:text-gray-300 mb-2">{`${record} • ${standing}`}</h3>
-        <TeamSelect allTeams={allTeams} teamId={'66'} />
+        <TeamSelect allTeams={allTeams} teamId={'16'} />
         <h2 className="font-semibold text-xl">Schedule</h2>
         <div>
           {games.map((game, index) => {
