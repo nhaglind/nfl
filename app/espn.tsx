@@ -53,13 +53,8 @@ type ConferenceRankingEntry = {
   overallWinLoss: string;
 };
 
-const DARK_LOGO_TEAMS = [
-  'Iowa Hawkeyes',
-  'Long Beach State Beach',
-  'Cincinnati Bearcats',
-];
-const DEFAULT_LOGO =
-  'https://a.espncdn.com/i/teamlogos/default-team-logo-500.png';
+const DARK_LOGO_TEAMS = [];
+const DEFAULT_LOGO = 'https://a.espncdn.com/i/teamlogos/default-team-logo-500.png';
 
 function getTeamColor(teamName: string): string {
   return DARK_LOGO_TEAMS.includes(teamName) ? '000000' : 'N/A';

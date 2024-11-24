@@ -161,10 +161,12 @@ export default async function HomePage() {
       <section className="w-full mx-auto p-6 border-r border-gray-200 dark:border-gray-800">
         <h2 className="font-semibold text-2xl">Conference</h2>
         <h3 className="text-sm text-gray-700 dark:text-gray-300 mb-2 flex justify-end pr-4">
-          GB
+          W-L
         </h3>
 
+
         <div>
+          Foobar
           {confRankings.map((team, index) => {
             return (
               <RankingRow
