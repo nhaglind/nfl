@@ -47,8 +47,8 @@ function Team({
             </p>
             <p
               className={clsx('text-sm', {
-                'text-gray-500': faded,
-                'text-gray-600 dark:text-gray-400': !faded,
+                'text-gray-500 ml-2': faded,
+                'text-gray-600 dark:text-gray-400 ml-2': !faded,
               })}
             >
               {record}
