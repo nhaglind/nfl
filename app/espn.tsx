@@ -230,7 +230,7 @@ export async function getConferenceRankings() {
   cacheLife('hours');
   
   const res = await fetch(
-    'https://site.web.api.espn.com/apis/v2/sports/football/nfl/standings?region=us&lang=en&contentorigin=espn&group=8&season=2024'
+    'https://site.web.api.espn.com/apis/v2/sports/football/nfl/standings'
   );
   
   if (!res.ok) {
@@ -238,34 +238,7 @@ export async function getConferenceRankings() {
   }
   
   const data = await res.json();
-  console.log('Raw API response:', JSON.stringify(data, null, 2));
+  console.log('Conference data:', data);
   
-  if (!data?.children?.[0]?.standings?.entries) {
-    console.error('Unexpected data structure:', JSON.stringify(data, null, 2));
-    throw new Error('Unexpected standings data structure');
-  }
-
-  console.log('Conference type:', data.children[0].name); // See which conference we're getting
-  
-  let teamsData = data.children[0].standings.entries.map((entry: any) => {
-    const { team, stats } = entry;
-    return {
-      name: team.displayName,
-      teamId: team.id,
-      logo: team.logos?.[0]?.href ?? null,
-      color: getTeamColor(team.displayName),
-      conferenceWinLoss: getStat(stats, 'vs. Conf.'),
-      gamesBack: getStat(stats, 'gamesBehind'),
-      overallWinLoss: `${getStat(stats, 'wins')}-${getStat(stats, 'losses')}`,
-    };
-  });
-
-  console.log('Processed teams:', teamsData);
-
-  return teamsData.sort((a, b) => {
-    if (a.gamesBack === '-' && b.gamesBack !== '-') return -1;
-    if (a.gamesBack !== '-' && b.gamesBack === '-') return 1;
-    if (a.gamesBack === '-' && b.gamesBack === '-') return 0;
-    return parseFloat(a.gamesBack) - parseFloat(b.gamesBack);
-  });
+  return data;
 }

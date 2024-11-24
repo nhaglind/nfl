@@ -112,7 +112,6 @@ function RankingRow({
     </div>
   );
 }
-
 export default async function HomePage() {
   const [team, allTeams, confRankings] = await Promise.all([
     getTeamData('16'),
@@ -120,6 +119,8 @@ export default async function HomePage() {
     getConferenceRankings(),
   ]);
   const { name, record, color, standing, games, logo } = team;
+
+  const afcDivisions = confRankings.children?.slice(0, 4) || [];
 
   return (
     <main className="grid md:grid-cols-2 lg:grid-cols-3">
@@ -136,9 +137,9 @@ export default async function HomePage() {
           ) : null}
           <h1 className="font-semibold text-2xl ml-2">{name}</h1>
         </div>
-        <h3 className="text-gray-700 dark:text-gray-300 mb-2">{`${record} • ${standing}`}</h3>
+        <h3 className="text-gray-700 dark:text-gray-300 mb-2 ml-2">{`${record} • ${standing}`}</h3>
         <TeamSelect allTeams={allTeams} teamId={'16'} />
-        <h2 className="font-semibold text-xl">Schedule</h2>
+        <h2 className="font-semibold text-xl mb-2">Schedule</h2>
         <div>
           {games.map((game, index) => {
             return (
@@ -152,31 +153,40 @@ export default async function HomePage() {
           })}
         </div>
       </section>
+
       <section className="w-full mx-auto p-6 border-r border-gray-200 dark:border-gray-800">
         <h2 className="font-semibold text-2xl">Scores</h2>
         <Suspense fallback={<ScoresLoading />}>
           <Scores />
         </Suspense>
       </section>
+
       <section className="w-full mx-auto p-6 border-r border-gray-200 dark:border-gray-800">
         <h2 className="font-semibold text-2xl">Conference</h2>
         <h3 className="text-sm text-gray-700 dark:text-gray-300 mb-2 flex justify-end pr-4">
           W-L
         </h3>
 
-
         <div>
-          Foobar
-          {confRankings.map((team, index) => {
-            return (
-              <RankingRow
-                key={team.teamId}
-                index={index}
-                isLast={index === confRankings.length - 1}
-                {...team}
-              />
-            );
-          })}
+          {afcDivisions.map((division) => (
+            <div key={division.id} className="mb-6">
+              <h3 className="font-semibold text-lg mb-2">{division.name}</h3>
+              {division.standings.entries.map((entry: any, index: number) => (
+                <RankingRow
+                  key={entry.team.id}
+                  index={index}
+                  isLast={index === division.standings.entries.length - 1}
+                  name={entry.team.displayName}
+                  teamId={entry.team.id}
+                  logo={entry.team.logos?.[0]?.href}
+                  color={entry.team.color || 'N/A'} // Using N/A as default color
+                  overallWinLoss={`${entry.stats.find((s: any) => s.name === 'wins')?.value}-${
+                    entry.stats.find((s: any) => s.name === 'losses')?.value
+                  }`}
+                />
+              ))}
+            </div>
+          ))}
         </div>
       </section>
     </main>
