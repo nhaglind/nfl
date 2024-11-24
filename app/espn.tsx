@@ -53,7 +53,7 @@ type ConferenceRankingEntry = {
   overallWinLoss: string;
 };
 
-const DARK_LOGO_TEAMS = [];
+const DARK_LOGO_TEAMS = ['vikings'];
 const DEFAULT_LOGO = 'https://a.espncdn.com/i/teamlogos/default-team-logo-500.png';
 
 function getTeamColor(teamName: string): string {
@@ -173,8 +173,7 @@ export async function getAllTeamIds(): Promise<TeamBasicInfo[]> {
       alternateColor: team.team.alternateColor,
       logo: team.team.logos?.[0]?.href ?? ''
     }))
-    .sort((a, b) => a.displayName.localeCompare(b.displayName));
-
+  .sort((a: any, b: any) => a.displayName.localeCompare(b.displayName));
   return teams;
 }
 

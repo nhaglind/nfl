@@ -168,7 +168,7 @@ export default async function HomePage() {
         </h3>
 
         <div>
-          {afcDivisions.map((division) => (
+          {afcDivisions.map((division: any) => (
             <div key={division.id} className="mb-6">
               <h3 className="font-semibold text-lg mb-2">{division.name}</h3>
               {division.standings.entries.map((entry: any, index: number) => (
