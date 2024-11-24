@@ -2,8 +2,8 @@ import './globals.css';
 
 export const metadata = {
   title: {
-    default: 'NCCAM Scores & Schedules',
-    template: '%s | NCCAM Scores & Schedules',
+    default: 'NFL Scores & Schedules',
+    template: '%s | NFL Scores & Schedules',
   },
   description: 'Like ESPN, but streamlined.',
 };
@@ -31,7 +31,7 @@ export default function RootLayout({
           </a>
           {', Next.js, and Vercel. '}
           <a
-            href="https://github.com/leerob/ncaam"
+            href="https://github.com/nhaglind/nfl"
             target="_blank"
             rel="noopener noreferrer"
             className="border-b border-gray-400 dark:border-gray-600 hover:border-gray-600 hover:dark:border-gray-400 hover:text-gray-800 hover:dark:text-gray-200 transition-all"

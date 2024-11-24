@@ -2,8 +2,8 @@ import type { MetadataRoute } from 'next';
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: 'NCAAM',
-    short_name: 'NCAAM',
+    name: 'NFL',
+    short_name: 'NFL',
     description: 'Simple football stats.',
     start_url: '/',
     display: 'standalone',
