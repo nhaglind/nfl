@@ -68,7 +68,70 @@ export async function getTeamData(teamId: string): Promise<TeamData> {
   'use cache';
   cacheLife('weeks');
 
-  if (teamId.includes('teamId')) {
+  if (!teamId || teamId === 'undefined' || teamId.includes('teamId')) {
+    teamId = '12';  
+  }
+
+  console.log('Fetching team data for:', teamId);
+
+  try {
+    const res = await fetch(
+      `https://site.web.api.espn.com/apis/site/v2/sports/football/nfl/teams/${teamId}/schedule`
+    );
+
+    if (!res.ok) {
+      console.error('Error fetching team data:', res.status, res.statusText);
+      // Return default data instead of throwing
+      return {
+        id: teamId,
+        name: '',
+        logo: '',
+        color: '',
+        record: '',
+        standing: '',
+        games: [],
+      };
+    }
+
+    const data = await res.json();
+
+    const games: GameData[] = data.events?.map((event: any) => {
+      const competitors = event.competitions[0].competitors;
+      const favoriteTeam = competitors.find((team: any) => team.id === teamId);
+      const otherTeam = competitors.find((team: any) => team.id !== teamId);
+
+      if (!favoriteTeam || !otherTeam) {
+        return null;
+      }
+
+      const color = getTeamColor(otherTeam.team.displayName);
+      const logo = otherTeam.team.logos?.[0]?.href ?? DEFAULT_LOGO;
+
+      return {
+        id: event.competitions[0].id,
+        date: event.competitions[0].status.type.shortDetail,
+        name: otherTeam.team.displayName,
+        teamId: otherTeam.team.id,
+        rank: 99,  // Added default rank
+        logo,
+        color,
+        homeScore: favoriteTeam.score?.value,
+        awayScore: otherTeam.score?.value,
+        winner: favoriteTeam.winner,
+      };
+    }).filter(Boolean) ?? [];
+
+    return {
+      id: teamId,
+      name: data.team?.displayName ?? '',
+      logo: data.team?.logos?.[0]?.href ?? '',
+      color: data.team?.color ?? '',
+      record: data.team?.recordSummary ?? '',
+      standing: data.team?.standingSummary ?? '',
+      games,
+    };
+  } catch (error) {
+    console.error('Error in getTeamData:', error);
     return {
       id: teamId,
       name: '',
@@ -79,53 +142,6 @@ export async function getTeamData(teamId: string): Promise<TeamData> {
       games: [],
     };
   }
-
-  const res = await fetch(
-    `https://site.api.espn.com/apis/site/v2/sports/football/nfl/teams/${teamId}/schedule`
-  );
-
-  if (!res.ok) {
-    throw new Error(`Failed to fetch team data: ${res.statusText}`);
-  }
-
-  const data = await res.json();
-
-  const games: GameData[] = data.events.map((event: any) => {
-    const competitors = event.competitions[0].competitors;
-    const favoriteTeam = competitors.find((team: any) => team.id === teamId);
-    const otherTeam = competitors.find((team: any) => team.id !== teamId);
-
-    if (!favoriteTeam || !otherTeam) {
-      throw new Error(
-        'Expected to find both the favorite team and an opposing team in the event competitors'
-      );
-    }
-
-    const color = getTeamColor(otherTeam.team.displayName);
-    const logo = otherTeam.team.logos?.[0]?.href ?? DEFAULT_LOGO;
-
-    return {
-      id: event.competitions[0].id,
-      date: event.competitions[0].status.type.shortDetail,
-      name: otherTeam.team.displayName,
-      teamId: otherTeam.team.id,
-      logo,
-      color,
-      homeScore: favoriteTeam.score?.value,
-      awayScore: otherTeam.score?.value,
-      winner: favoriteTeam.winner,
-    };
-  });
-
-  return {
-    id: teamId,
-    name: data.team.displayName,
-    logo: data.team.logo,
-    color: data.team.color,
-    record: data.team.recordSummary,
-    standing: data.team.standingSummary,
-    games,
-  };
 }
 
 export async function getAllTeamIds(): Promise<TeamBasicInfo[]> {
@@ -209,7 +225,6 @@ function formatTeamData(teamData: CompetitorData) {
     record: teamData.records?.[0]?.summary ?? 'N/A'
   };
 }
-
 export async function getConferenceRankings() {
   'use cache';
   cacheLife('hours');
@@ -223,12 +238,15 @@ export async function getConferenceRankings() {
   }
   
   const data = await res.json();
+  console.log('Raw API response:', JSON.stringify(data, null, 2));
   
   if (!data?.children?.[0]?.standings?.entries) {
     console.error('Unexpected data structure:', JSON.stringify(data, null, 2));
     throw new Error('Unexpected standings data structure');
   }
 
+  console.log('Conference type:', data.children[0].name); // See which conference we're getting
+  
   let teamsData = data.children[0].standings.entries.map((entry: any) => {
     const { team, stats } = entry;
     return {
@@ -241,6 +259,8 @@ export async function getConferenceRankings() {
       overallWinLoss: `${getStat(stats, 'wins')}-${getStat(stats, 'losses')}`,
     };
   });
+
+  console.log('Processed teams:', teamsData);
 
   return teamsData.sort((a, b) => {
     if (a.gamesBack === '-' && b.gamesBack !== '-') return -1;
