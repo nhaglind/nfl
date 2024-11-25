@@ -4,7 +4,7 @@
 
 ## Overview
 
-Forked from [leerob]([https://github.com/leerob](https://github.com/leerob/ncaam)) and modified for the NFL.
+Forked from [leerob](https://github.com/leerob/ncaam) and modified for the NFL.
 
 This site using the following stack:
 
