@@ -94,16 +94,20 @@ export default async function HomePage(props: {
       <div className="h-4" style={{ background: `#${color}` }} />
       <section className="my-6 max-w-lg mx-auto px-4">
         <div className="flex items-center">
-          <Image
-            src={logo}
-            alt="Logo"
-            priority
-            width={24}
-            height={24}
-            className={clsx('h-6 w-6', {
-              'dark:invert': color === '000000',
-            })}
-          />
+          {logo && logo.startsWith('http') ? (
+            <Image
+              src={logo}
+              alt="Logo"
+              priority
+              width={24}
+              height={24}
+              className={clsx('h-6 w-6', {
+                'dark:invert': color === '000000',
+              })}
+            />
+          ) : (
+              <div className="w-6 h-6 bg-gray-200 rounded-full" />
+            )}
           <h1 className="font-semibold text-2xl ml-2">{name}</h1>
         </div>
         <h3 className="text-gray-700 dark:text-gray-300 mb-2">{`${record} • ${standing}`}</h3>
