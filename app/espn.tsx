@@ -112,7 +112,6 @@ export async function getTeamData(teamId: string): Promise<TeamData> {
         date: event.competitions[0].status.type.shortDetail,
         name: otherTeam.team.displayName,
         teamId: otherTeam.team.id,
-        rank: 99,  // Added default rank
         logo,
         color,
         homeScore: favoriteTeam.score?.value,
@@ -124,7 +123,7 @@ export async function getTeamData(teamId: string): Promise<TeamData> {
     return {
       id: teamId,
       name: data.team?.displayName ?? '',
-      logo: data.team?.logos?.[0]?.href ?? '',
+      logo: data.team.logo ?? '',
       color: data.team?.color ?? '',
       record: data.team?.recordSummary ?? '',
       standing: data.team?.standingSummary ?? '',
@@ -237,7 +236,6 @@ export async function getConferenceRankings() {
   }
   
   const data = await res.json();
-  console.log('Conference data:', data);
   
   return data;
 }
